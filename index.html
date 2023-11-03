@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    ID: <input type="number" id="id-input">
+    Product name: <input type="text" id="productname-input">
+    unitPrice: <input type="text" id="unitprice-input">
+    units in stock: <input type="text" id="unitsinstock-input">
+    quantity per unit: <input type="text" id="quantityperunit-input">
+    <table id="products-table" border="1">
+        <button onclick="createpost()"id="create">Create</button>
+        <button onclick="updatepost()"id="update">Update</button>
+        <tr>
+            <th>ID</th>
+            <th>Product Name</th>
+            <th>Unit Price</th>
+            <th>units in stock</th>
+            <th>quantity per unit</th>
+            <th>Buttons</th>
+        </tr>
+    </table>
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+    <script>
+const datatable=document.getElementById('products-table')
+const dbUrl="http://localhost:3000/Post"
+async function fetchdata() {
+    try{
+const res= await axios.get(dbUrl)
+add(res.data)
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+function add(data) {
+    // datatable.innerHTML=``
+    data.forEach(element => {
+        const tr=document.createElement('tr')
+        tr.innerHTML+=`
+        <tr>
+            <td>
+                ${element.id}
+            </td>
+            <td>
+                ${element.name}
+            </td>
+            <td>
+                ${element.unitPrice}
+            </td>
+            <td>
+                ${element.unitsInStock}
+            </td>
+            <td>
+                ${element.quantityPerUnit}
+            </td>
+            <button id="edit" onclick="editpost(${element.id})">Edit</button>
+            <button id="del" onclick="deletepost(${element.id})">Delete</button>
+            </tr>
+        `
+        datatable.append(tr)
+    });
+}
+async function createpost() {
+    const ID=document.getElementById('id-input').value
+const productname=document.getElementById("productname-input").value
+const unitprice=document.getElementById('unitprice-input').value
+const unitsInStock=document.getElementById('unitsinstock-input').value
+const quantityperunit=document.getElementById('quantityperunit-input').value
+try{
+await axios.post(dbUrl,{
+    id:ID,
+    name:productname,
+    unitPrice:unitprice,
+    unitsInStock:unitsInStock,
+    quantityPerUnit:quantityperunit
+   
+})
+fetchdata()
+}
+catch(error){
+console.log(error);
+}
+}
+let editId=null
+async function editpost(postid) {
+const createbtn=document.getElementById('create')
+// const updatebtn=document.getElementById('update')
+createbtn.style.display='none'
+// createbtn.textContent='Save'
+    try{
+const res=await axios.get(`${dbUrl}/${postid}`)
+const post=res.data
+document.getElementById('id-input').value=post.id
+document.getElementById("productname-input").value=post. name
+document.getElementById('unitprice-input').value=post.unitPrice
+document.getElementById('unitsinstock-input').value=post.unitsInStock
+document.getElementById('quantityperunit-input').value=post.quantityPerUnit
+editId=postid
+// fetchdata()
+    }
+    catch(error){
+console.log(error);
+    }
+}
+async function updatepost() {
+
+    const ID=document.getElementById('id-input').value
+const productname=document.getElementById("productname-input").value
+const unitprice=document.getElementById('unitprice-input').value
+const unitsInStock=document.getElementById('unitsinstock-input').value
+const quantityperunit=document.getElementById('quantityperunit-input').value
+    if(editId){
+        try {
+           await axios.put(`${dbUrl}/${editId}`,{
+            id:ID,
+    name:productname,
+    unitPrice:unitprice,
+    unitsInStock:unitsInStock,
+    quantityPerUnit:quantityperunit
+            })
+            fetchdata()
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+}
+
+
+async function deletepost(postId) {
+    try {
+        
+        await axios.delete(`${dbUrl}/${postId}`)
+        fetchdata()
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+fetchdata()
+    </script>
+</body>
+</html>
