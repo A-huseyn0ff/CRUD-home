@@ -1,0 +1,25 @@
+{
+  "Post": [
+    {
+      "id": 5,
+      "name": "airpods",
+      "unitPrice": "2000$",
+      "unitsInStock": "100 boxes",
+      "quantityPerUnit": "6 kg box"
+    },
+    {
+      "id": "15",
+      "name": "ipad",
+      "unitPrice": "1000$",
+      "unitsInStock": "200 boxes",
+      "quantityPerUnit": "1 kg box"
+    },
+    {
+      "id": "100",
+      "name": "salam",
+      "unitPrice": "3000$",
+      "unitsInStock": "100 boxes",
+      "quantityPerUnit": "1kg"
+    }
+  ]
+}
